@@ -44,6 +44,76 @@
     "https"
   ],
   "paths": {
+    "/stream/{owner}/{id}/{streamid}" : {
+      "get" : {
+        "tags" : [ "streams" ],
+        "summary" : "Download records from a stream.",
+        "description" : "",
+        "operationId" : "downloadStream",
+        "produces" : [ "application/json", "application/json-l" ],
+        "parameters" : [
+          {
+          "$ref": "#/parameters/owner"
+          },
+          {
+            "$ref": "#/parameters/datasetId"
+          },
+          {
+            "$ref": "#/parameters/streamId"
+          },
+          {
+          "name" : "timestamp",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "security" : [ {
+          "token" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "streams" ],
+        "summary" : "Append records to a stream.",
+        "description" : "",
+        "operationId" : "appendRecords",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [
+          {
+            "$ref": "#/parameters/owner"
+          },
+          {
+            "$ref": "#/parameters/datasetId"
+          },
+          {
+            "$ref": "#/parameters/streamId"
+          },
+          {
+            "in" : "body",
+            "name" : "body",
+            "required" : true,
+            "schema" : {
+              "$ref" : "#/definitions/RecordsAppendRequest"
+            }
+          } ],
+        "responses" : {
+          "200" : {
+            "description" : "Records have been appended successfully.",
+            "schema" : {
+              "$ref" : "#/definitions/SuccessMessage"
+            }
+          }
+        },
+        "security" : [ {
+          "token" : [ ]
+        } ]
+      }
+    },
     "/download/{owner}/{id}": {
       "get": {
         "tags": [
@@ -2381,6 +2451,17 @@
       ],
       "title": "File Response"
     },
+    "RecordsAppendRequest" : {
+      "type" : "object",
+      "properties" : {
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
     "SuccessMessage": {
       "type": "object",
       "properties": {
@@ -2529,6 +2610,13 @@
       "in": "query",
       "type": "string",
       "description": "Token from previous result page to be used when requesting a subsequent page."
+    },
+    "streamId": {
+      "name": "streamid",
+      "in": "path",
+      "type": "string",
+      "required": true,
+      "description": "Stream id."
     }
   }
 }
